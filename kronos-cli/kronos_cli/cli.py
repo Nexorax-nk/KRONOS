@@ -8,6 +8,8 @@ from .models import Memory
 from .dashboard import generate_dashboard
 from .agents.kronos_ask import KronosAskAgent
 from .agents.reviewer import MRReviewAgent
+from .agents.decision_extractor import DecisionExtractorAgent
+from .agents.reply_handler import ReplyHandlerAgent
 from .github_client import GitHubClient
 
 console = Console()
@@ -154,6 +156,85 @@ def review_pr(repo, pr, path):
     
     gh_client.post_comment(repo, pr, comment)
     console.print("[green]✅ Comment posted successfully![/green]")
+
+@main.command("extract-pr")
+@click.option("--repo", required=True, help="GitHub repository name")
+@click.option("--pr", required=True, type=int, help="Pull Request number")
+@click.option("--path", default=".kronos", help="Path to save the memory.")
+def extract_pr(repo, pr, path):
+    """Post-merge hook to extract architectural decisions from a PR."""
+    if not os.environ.get("GITHUB_TOKEN"):
+        console.print("[red]Error:[/red] GITHUB_TOKEN is required.")
+        return
+
+    gh_client = GitHubClient()
+    diff = gh_client.get_pr_diff(repo, pr)
+    
+    if "Error fetching diff" in diff:
+        console.print(f"[red]{diff}[/red]")
+        return
+        
+    console.print(f"[cyan]🧠 KRONOS is extracting decisions from merged PR #{pr}...[/cyan]")
+    
+    pr_metadata = {"number": str(pr), "author": "merged_dev", "title": "Merge PR changes"}
+    extractor = DecisionExtractorAgent()
+    memory = extractor.extract(diff, pr_metadata)
+    
+    # Save the memory to .kronos/
+    p = Path(path)
+    p.mkdir(parents=True, exist_ok=True)
+    memory_file = p / f"memory-00{pr}.json"
+    
+    # Convert memory back to dict/json safely
+    with open(memory_file, "w") as f:
+        json.dump(json.loads(memory.json()), f, indent=4)
+        
+    console.print(f"[green]✅ Successfully extracted memory and saved to {memory_file}![/green]")
+
+@main.command("handle-reply")
+@click.option("--repo", required=True, help="GitHub repository name")
+@click.option("--pr", required=True, type=int, help="PR/Issue number")
+@click.option("--comment", required=True, help="The comment text")
+@click.option("--path", default=".kronos", help="Path to the kronos memory directory.")
+def handle_reply(repo, pr, comment, path):
+    """Processes KRONOS reply commands in PR comments."""
+    if not os.environ.get("GITHUB_TOKEN"):
+        console.print("[red]Error:[/red] GITHUB_TOKEN is required.")
+        return
+
+    p = Path(path)
+    memories = []
+    if p.exists():
+        for file in p.glob("*.json"):
+            try:
+                with open(file, "r") as f:
+                    memories.append(Memory(**json.load(f)))
+            except Exception:
+                continue
+
+    console.print(f"[cyan]🧠 KRONOS is parsing comment command...[/cyan]")
+    handler = ReplyHandlerAgent()
+    msg, updated_memories = handler.handle(comment, memories)
+    
+    if "Memory Evolved!" in msg:
+        # Save updated memories back to disk
+        for m in updated_memories:
+            # Re-write the file
+            # Find the file corresponding to the memory ID or create one
+            # For simplicity, we search for files with that memory ID inside
+            for file in p.glob("*.json"):
+                try:
+                    with open(file, "r") as f:
+                        data = json.load(f)
+                    if data.get("id") == m.id:
+                        with open(file, "w") as f:
+                            json.dump(json.loads(m.json()), f, indent=4)
+                except Exception:
+                    continue
+
+    gh_client = GitHubClient()
+    gh_client.post_comment(repo, pr, msg)
+    console.print("[green]✅ Reply handled and response posted![/green]")
 
 if __name__ == "__main__":
     main()

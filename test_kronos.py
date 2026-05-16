@@ -34,10 +34,24 @@ def sim_review():
         pr_metadata={"title": "Add retry logic", "author": "new_dev"}
     )
     
-    print("\n--- KRONOS'S PR COMMENT ---")
     # Configure stdout to handle emojis safely on Windows
     sys.stdout.reconfigure(encoding='utf-8')
     print(result)
+
+    print("\n--- PHASE 3: DECISION EXTRACTION SIMULATION ---")
+    from kronos_cli.agents.decision_extractor import DecisionExtractorAgent
+    extractor = DecisionExtractorAgent()
+    metadata = {"number": "42", "author": "alice"}
+    new_memory = extractor.extract(bad_diff, metadata)
+    print(f"Successfully Extracted Memory ID: {new_memory.id}")
+    print(f"Extracted Decision: {new_memory.decision}")
+
+    print("\n--- PHASE 3: REPLY EVOLUTION SIMULATION ---")
+    from kronos_cli.agents.reply_handler import ReplyHandlerAgent
+    handler = ReplyHandlerAgent()
+    comment = "kronos:intentional we upgraded our backend infrastructure to handle high concurrent load."
+    reply_msg, evolved_memories = handler.handle(comment, [memory])
+    print(reply_msg)
 
 if __name__ == "__main__":
     sim_review()

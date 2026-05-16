@@ -2,7 +2,7 @@ name: KRONOS Institutional Memory
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
   issues:
     types: [opened, assigned]
   issue_comment:
@@ -16,6 +16,7 @@ permissions:
 jobs:
   kronos-triage:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened')
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
@@ -49,3 +50,58 @@ jobs:
 
           
           echo "✅ Analysis complete. Comment posted to PR."
+
+  kronos-post-merge:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install KRONOS Core
+        run: pip install ./kronos-cli
+
+      - name: 🧠 KRONOS Post-Merge Decision Extraction
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Extracting decisions from PR #$PR_NUMBER..."
+          kronos extract-pr --repo $REPO --pr $PR_NUMBER --path .kronos
+
+  kronos-reply-handler:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'kronos:')
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install KRONOS Core
+        run: pip install ./kronos-cli
+
+      - name: 🧠 KRONOS Reply Parse
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          echo "Processing command: $COMMENT_BODY..."
+          kronos handle-reply --repo $REPO --pr $PR_NUMBER --comment "$COMMENT_BODY" --path .kronos

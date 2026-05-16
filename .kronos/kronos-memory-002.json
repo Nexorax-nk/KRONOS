@@ -1,0 +1,23 @@
+{
+    "id": "KRONOS-MEMORY-002",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/1",
+    "date": "2026-05-17T03:27:12.078701",
+    "governs_files": [
+        "src/db/*.py"
+    ],
+    "decision": "Always use SQLAlchemy async sessions for database queries.",
+    "rejected": "Raw psycopg2 synchronous connections.",
+    "reason": "Synchronous queries were blocking the FastAPI event loop, causing severe latency spikes during load.\n\n[EVOLVED in https://github.com/Nexorax-nk/KRONOS/pull/4]: We found a better async driver",
+    "future_implication": null,
+    "decided_by": [
+        "dev-author"
+    ],
+    "confidence": "HIGH",
+    "status": "Deprecated",
+    "carbon_impact": null,
+    "incident_type": null,
+    "depends_on": [],
+    "blocks": [],
+    "source_type": "discussion",
+    "security_relevant": false
+}
