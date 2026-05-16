@@ -1,0 +1,2 @@
+[console_scripts]
+lore = lore_cli.cli:main

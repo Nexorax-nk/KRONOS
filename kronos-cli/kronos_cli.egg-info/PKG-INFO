@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: kronos-cli
+Version: 0.1.0
+Summary: Institutional Memory CLI for GitHub
+Author-email: Antigravity <antigravity@deepmind.com>
+Requires-Dist: click>=8.1.0
+Requires-Dist: rich>=12.0.0
+Requires-Dist: pydantic>=2.0.0
+Requires-Dist: pygithub>=1.58.0
+Requires-Dist: anthropic>=0.5.0
+Requires-Dist: jinja2>=3.1.0
+Requires-Dist: networkx>=3.0.0
+Requires-Dist: mermaid-python>=0.1.0
