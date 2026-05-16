@@ -56,6 +56,20 @@ def generate_dashboard(memories: List[Memory], output_path: str):
     env = Environment(loader=FileSystemLoader(template_dir))
     template = env.get_template("dashboard.html")
 
+    # Prepare clean dictionary serializations for Jinja2
+    recent_memories_dicts = []
+    for m in memories[:10]:
+        recent_memories_dicts.append({
+            "id": m.id,
+            "decision": m.decision,
+            "reason": m.reason,
+            "governs_files": m.governs_files,
+            "decided_by": m.decided_by,
+            "status": m.status.value if hasattr(m.status, 'value') else m.status,
+            "security_relevant": m.security_relevant,
+            "date": m.date.strftime("%Y-%m-%d") if hasattr(m.date, 'strftime') else str(m.date)
+        })
+
     # Render
     html = template.render(
         total_memories=total_memories,
@@ -65,7 +79,7 @@ def generate_dashboard(memories: List[Memory], output_path: str):
         total_co2=total_co2,
         total_trees=total_trees,
         mermaid_graph_code=mermaid_graph_code,
-        recent_memories=memories[:10]
+        recent_memories=recent_memories_dicts
     )
 
     with open(output_path, "w", encoding="utf-8") as f:

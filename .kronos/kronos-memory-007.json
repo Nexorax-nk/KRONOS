@@ -1,0 +1,18 @@
+{
+    "id": "KRONOS-MEMORY-007",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/55",
+    "date": "2026-05-02T11:24:00",
+    "governs_files": [
+        "src/api/payment.py"
+    ],
+    "decision": "Direct handling of raw credit card numbers or security codes in memory is strictly forbidden. Force payment gateway tokenization.",
+    "reason": "Avoid PCI-DSS compliance scope inflation and reduce data security breach exposure.",
+    "decided_by": [
+        "sec_expert"
+    ],
+    "rejected": "false",
+    "status": "Active",
+    "depends_on": [],
+    "blocks": [],
+    "security_relevant": true
+}

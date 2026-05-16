@@ -1,0 +1,18 @@
+{
+    "id": "KRONOS-MEMORY-005",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/31",
+    "date": "2026-03-22T16:45:00",
+    "governs_files": [
+        "src/api/auth.py"
+    ],
+    "decision": "All JWT signature operations must use RS256 asymmetric keys. HS256 symmetric signing is banned due to key-sharing exposure risks.",
+    "reason": "Prevent credential misuse if a sub-service key leaks. Asymmetric keys ensure only the identity microservice can sign tokens.",
+    "decided_by": [
+        "sec_expert"
+    ],
+    "rejected": "false",
+    "status": "Active",
+    "depends_on": [],
+    "blocks": [],
+    "security_relevant": true
+}

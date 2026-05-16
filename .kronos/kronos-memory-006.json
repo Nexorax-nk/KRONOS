@@ -1,0 +1,20 @@
+{
+    "id": "KRONOS-MEMORY-006",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/40",
+    "date": "2026-04-18T10:10:00",
+    "governs_files": [
+        "src/db/connection.py"
+    ],
+    "decision": "All database connections must explicitly configure and enforce SSL mode 'require' to secure queries in transit.",
+    "reason": "Prevent MITM eavesdropping on internal database connection channels inside cloud environments.",
+    "decided_by": [
+        "charlie"
+    ],
+    "rejected": "false",
+    "status": "Active",
+    "depends_on": [
+        "KRONOS-MEMORY-003"
+    ],
+    "blocks": [],
+    "security_relevant": true
+}

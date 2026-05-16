@@ -1,0 +1,18 @@
+{
+    "id": "KRONOS-MEMORY-003",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/12",
+    "date": "2026-02-10T14:32:00",
+    "governs_files": [
+        "src/db/connection.py"
+    ],
+    "decision": "All database interactions must utilize pooled connection objects. Do not instantiate new connection blocks inside standard queries.",
+    "reason": "Direct socket instantiation resulted in connection pooling exhaustion under high load during a spike in February, causing 500 server errors for 15 minutes.",
+    "decided_by": [
+        "charlie"
+    ],
+    "rejected": "false",
+    "status": "Active",
+    "depends_on": [],
+    "blocks": [],
+    "security_relevant": false
+}

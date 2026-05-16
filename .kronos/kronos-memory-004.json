@@ -1,0 +1,18 @@
+{
+    "id": "KRONOS-MEMORY-004",
+    "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/24",
+    "date": "2026-03-05T09:15:00",
+    "governs_files": [
+        "src/utils/logger.py"
+    ],
+    "decision": "Plaintext logging of PII (credentials, tokens, cards, SSNs) is strictly prohibited. Logger utilities must execute scrubbing routines.",
+    "reason": "Compliance audits flagged exposed user JWT tokens in the staging server log streams, creating a high-severity data leakage vulnerability.",
+    "decided_by": [
+        "sec_expert"
+    ],
+    "rejected": "false",
+    "status": "Active",
+    "depends_on": [],
+    "blocks": [],
+    "security_relevant": true
+}
