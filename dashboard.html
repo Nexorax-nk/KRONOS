@@ -337,6 +337,15 @@
         .mermaid {
             background: transparent !important;
             width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mermaid svg {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 480px;
+            max-height: 650px;
         }
 
         /* Ledger Cards (Vault) */
@@ -575,6 +584,9 @@
     classDef activeNode fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#fff,rx:10px,ry:10px;
     classDef deprecatedNode fill:#2d1a1a,stroke:#ef4444,stroke-width:1px,color:#94a3b8,rx:10px,ry:10px;
     classDef fileNode fill:#0f172a,stroke:#334155,stroke-width:1px,color:#38bdf8,rx:5px,ry:5px;
+    KRONOS-MEMORY-001["KRONOS-MEMORY-001<br/>Use fixed retry intervals inst..."]:::deprecatedNode
+    src_api_auth_py["📄 src/api/auth.py"]:::fileNode
+    KRONOS-MEMORY-001 -->|governs| src_api_auth_py
     KRONOS-MEMORY-002["KRONOS-MEMORY-002<br/>Always use SQLAlchemy async se..."]:::deprecatedNode
     src_db_*_py["📄 src/db/*.py"]:::fileNode
     KRONOS-MEMORY-002 -->|governs| src_db_*_py
@@ -594,9 +606,6 @@
     KRONOS-MEMORY-007["KRONOS-MEMORY-007<br/>Direct handling of raw credit ..."]:::deprecatedNode
     src_api_payment_py["📄 src/api/payment.py"]:::fileNode
     KRONOS-MEMORY-007 -->|governs| src_api_payment_py
-    KRONOS-MEMORY-001["KRONOS-MEMORY-001<br/>Use fixed retry intervals..."]:::deprecatedNode
-    src_api_auth_py["📄 src/api/auth.py"]:::fileNode
-    KRONOS-MEMORY-001 -->|governs| src_api_auth_py
                         </div>
                     </div>
                 </div>
@@ -639,6 +648,29 @@
             <div class="section-card">
                 <h2>📚 Ledger Vault</h2>
                 <div class="vault-grid" id="vault-list">
+                    
+                    
+                    <div class="vault-card" data-id="KRONOS-MEMORY-001" data-decision="Use fixed retry intervals instead of exponential backoff strategy." data-reason="Thundering herd effect was identified when dealing with 1000+ concurrent requests, temporarily bringing down the auth service." data-author="alice" data-files="src/api/auth.py ">
+                        <div class="vault-header">
+                            <div class="vault-id">KRONOS-MEMORY-001</div>
+                            <div class="vault-badges">
+                                <span class="badge badge-deprecated">
+                                    Active
+                                </span>
+                                
+                            </div>
+                        </div>
+                        <div class="vault-decision">Use fixed retry intervals instead of exponential backoff strategy.</div>
+                        <div class="vault-reason">Thundering herd effect was identified when dealing with 1000+ concurrent requests, temporarily bringing down the auth service.</div>
+                        <div class="vault-footer">
+                            <div class="governed-files">
+                                📁 governs: src/api/auth.py
+                            </div>
+                            <div style="font-weight: 500;">
+                                Architect: <span style="color:#fff;">alice</span>
+                            </div>
+                        </div>
+                    </div>
                     
                     
                     <div class="vault-card" data-id="KRONOS-MEMORY-002" data-decision="Always use SQLAlchemy async sessions for database queries." data-reason="Synchronous queries were blocking the FastAPI event loop, causing severe latency spikes during load.
@@ -786,29 +818,6 @@
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">sec_expert</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="vault-card" data-id="KRONOS-MEMORY-001" data-decision="Use fixed retry intervals" data-reason="Thundering herd at 1000+ concurrent requests" data-author="@alice" data-files="src/api/auth.py ">
-                        <div class="vault-header">
-                            <div class="vault-id">KRONOS-MEMORY-001</div>
-                            <div class="vault-badges">
-                                <span class="badge badge-deprecated">
-                                    Active
-                                </span>
-                                
-                            </div>
-                        </div>
-                        <div class="vault-decision">Use fixed retry intervals</div>
-                        <div class="vault-reason">Thundering herd at 1000+ concurrent requests</div>
-                        <div class="vault-footer">
-                            <div class="governed-files">
-                                📁 governs: src/api/auth.py
-                            </div>
-                            <div style="font-weight: 500;">
-                                Architect: <span style="color:#fff;">@alice</span>
                             </div>
                         </div>
                     </div>
