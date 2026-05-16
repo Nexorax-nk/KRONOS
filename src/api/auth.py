@@ -14,4 +14,4 @@ class AuthManager:
         return False
         
     def _retry(self, interval):
-        pass
+        retry_strategy = ExponentialBackoff()
