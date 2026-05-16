@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORE | Institutional Memory Dashboard</title>
+    <title>KRONOS | Institutional Memory Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
@@ -165,14 +165,14 @@
 <body>
     <div class="container animate-fade">
         <header>
-            <div class="logo">LORE.</div>
+            <div class="logo">KRONOS.</div>
             <div class="badge badge-active">Live Institutional Memory</div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Memories</div>
-                <div class="stat-value">1</div>
+                <div class="stat-value">2</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Security Relevant</div>
@@ -180,7 +180,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Carbon Savings</div>
-                <div class="stat-value">~300 kWh</div>
+                <div class="stat-value">~600 kWh</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Memory Health</div>
@@ -193,8 +193,16 @@
                 <div class="section-card">
                     <h2>🧠 Decision Graph</h2>
                     <div class="mermaid">
-                        graph TD
-                        
+                        flowchart TD
+    classDef activeNode fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef deprecatedNode fill:#2d1a1a,stroke:#ef4444,stroke-width:1px,color:#94a3b8,rx:10px,ry:10px;
+    classDef fileNode fill:#0f172a,stroke:#334155,stroke-width:1px,color:#38bdf8,rx:5px,ry:5px;
+    KRONOS-MEMORY-002["KRONOS-MEMORY-002<br/>Always use SQLAlchemy async se..."]:::deprecatedNode
+    src_db_*_py["📄 src/db/*.py"]:::fileNode
+    KRONOS-MEMORY-002 -->|governs| src_db_*_py
+    KRONOS-MEMORY-001["KRONOS-MEMORY-001<br/>Use fixed retry intervals..."]:::deprecatedNode
+    src_api_auth_py["📄 src/api/auth.py"]:::fileNode
+    KRONOS-MEMORY-001 -->|governs| src_api_auth_py
                     </div>
                 </div>
 
@@ -204,7 +212,17 @@
                         
                         <div class="memory-item">
                             <div>
-                                <div style="font-weight: 600;">LORE-MEMORY-001: Use fixed retry intervals</div>
+                                <div style="font-weight: 600;">KRONOS-MEMORY-002: Always use SQLAlchemy async sessions for database queries.</div>
+                                <div style="font-size: 0.875rem; color: var(--text-dim);">2026-05-17 03:27:12.078701 · dev-author</div>
+                            </div>
+                            <div class="badge badge-active">
+                                Active
+                            </div>
+                        </div>
+                        
+                        <div class="memory-item">
+                            <div>
+                                <div style="font-weight: 600;">KRONOS-MEMORY-001: Use fixed retry intervals</div>
                                 <div style="font-size: 0.875rem; color: var(--text-dim);">2026-01-15 00:00:00 · @alice</div>
                             </div>
                             <div class="badge badge-active">
@@ -229,15 +247,15 @@
                         <tbody>
                             <tr>
                                 <td>Energy (kWh)</td>
-                                <td>300</td>
+                                <td>600</td>
                             </tr>
                             <tr>
                                 <td>CO2 Equiv</td>
-                                <td>120kg</td>
+                                <td>240kg</td>
                             </tr>
                             <tr>
                                 <td>Trees Equiv</td>
-                                <td>5</td>
+                                <td>11</td>
                             </tr>
                         </tbody>
                     </table>
