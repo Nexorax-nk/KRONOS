@@ -123,7 +123,8 @@ def ask(question, path):
 @click.option("--repo", required=True, help="GitHub repository name (e.g., owner/repo)")
 @click.option("--pr", required=True, type=int, help="Pull Request number")
 @click.option("--path", default=".kronos", help="Path to the kronos memory directory.")
-def review_pr(repo, pr, path):
+@click.option("--fail-on-conflict", is_flag=True, help="Exit with 1 if a critical conflict is detected.")
+def review_pr(repo, pr, path, fail_on_conflict):
     """Run the 5-layer MR Review Agent on a live Pull Request."""
     p = Path(path)
     memories = []
@@ -156,6 +157,12 @@ def review_pr(repo, pr, path):
     
     gh_client.post_comment(repo, pr, comment)
     console.print("[green]✅ Comment posted successfully![/green]")
+
+    # Check for critical conflict to enforce guardrails
+    if fail_on_conflict and ("🔴" in comment or "CRITICAL CONFLICT DETECTED" in comment):
+        console.print("[bold red]🚨 GUARDRAIL FAILURE: Critical conflict detected between proposed code and Institutional Memory ledgers![/bold red]")
+        import sys
+        sys.exit(1)
 
 @main.command("extract-pr")
 @click.option("--repo", required=True, help="GitHub repository name")

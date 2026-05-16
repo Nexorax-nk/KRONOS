@@ -46,7 +46,7 @@ jobs:
           
           # This command represents the execution of the MR Review Agent
           # In a live setup, it posts the comment directly to the PR.
-          kronos review-pr --repo $REPO --pr $PR_NUMBER
+          kronos review-pr --repo $REPO --pr $PR_NUMBER --fail-on-conflict
 
           
           echo "✅ Analysis complete. Comment posted to PR."
