@@ -133,8 +133,8 @@ def review_pr(repo, pr, path):
             except Exception:
                 continue
 
-    if not os.environ.get("GITHUB_TOKEN") or not os.environ.get("ANTHROPIC_API_KEY"):
-        console.print("[red]Error:[/red] GITHUB_TOKEN and ANTHROPIC_API_KEY are required.")
+    if not os.environ.get("GITHUB_TOKEN"):
+        console.print("[red]Error:[/red] GITHUB_TOKEN is required to post comments.")
         return
 
     gh_client = GitHubClient()
