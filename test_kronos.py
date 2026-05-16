@@ -17,9 +17,9 @@ def sim_review():
 
     # 2. Simulate a "Bad" PR Diff (Trying to use Exponential Backoff which was rejected)
     bad_diff = """
-    --- a/src/api/auth.py
-    +++ b/src/api/auth.py
-    @@ -10,5 +10,10 @@ def login():
+    --- a/atlas/security/auth/authenticator.py
+    +++ b/atlas/security/auth/authenticator.py
+    @@ -10,5 +10,10 @@ def authenticate_user(username: str, credentials_hash: str):
     +    # Adding retry logic with exponential backoff
     +    retry_strategy = ExponentialBackoff(base=2, factor=5)
     +    return attempt_login(retry_strategy)

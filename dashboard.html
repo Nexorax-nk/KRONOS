@@ -585,27 +585,27 @@
     classDef deprecatedNode fill:#2d1a1a,stroke:#ef4444,stroke-width:1px,color:#94a3b8,rx:10px,ry:10px;
     classDef fileNode fill:#0f172a,stroke:#334155,stroke-width:1px,color:#38bdf8,rx:5px,ry:5px;
     KRONOS-MEMORY-001["KRONOS-MEMORY-001<br/>Use fixed retry intervals inst..."]:::deprecatedNode
-    src_api_auth_py["📄 src/api/auth.py"]:::fileNode
-    KRONOS-MEMORY-001 -->|governs| src_api_auth_py
+    atlas_security_auth_authenticator_py["📄 atlas/security/auth/authenticator.py"]:::fileNode
+    KRONOS-MEMORY-001 -->|governs| atlas_security_auth_authenticator_py
     KRONOS-MEMORY-002["KRONOS-MEMORY-002<br/>Always use SQLAlchemy async se..."]:::deprecatedNode
-    src_db_*_py["📄 src/db/*.py"]:::fileNode
-    KRONOS-MEMORY-002 -->|governs| src_db_*_py
+    atlas_database_infrastructure_*_py["📄 atlas/database/infrastructure/*.py"]:::fileNode
+    KRONOS-MEMORY-002 -->|governs| atlas_database_infrastructure_*_py
     KRONOS-MEMORY-003["KRONOS-MEMORY-003<br/>All database interactions must..."]:::deprecatedNode
-    src_db_connection_py["📄 src/db/connection.py"]:::fileNode
-    KRONOS-MEMORY-003 -->|governs| src_db_connection_py
+    atlas_database_infrastructure_connector_py["📄 atlas/database/infrastructure/connector.py"]:::fileNode
+    KRONOS-MEMORY-003 -->|governs| atlas_database_infrastructure_connector_py
     KRONOS-MEMORY-004["KRONOS-MEMORY-004<br/>Plaintext logging of PII (cred..."]:::deprecatedNode
-    src_utils_logger_py["📄 src/utils/logger.py"]:::fileNode
-    KRONOS-MEMORY-004 -->|governs| src_utils_logger_py
+    atlas_core_telemetry_logger_py["📄 atlas/core/telemetry/logger.py"]:::fileNode
+    KRONOS-MEMORY-004 -->|governs| atlas_core_telemetry_logger_py
     KRONOS-MEMORY-005["KRONOS-MEMORY-005<br/>All JWT signature operations m..."]:::deprecatedNode
-    src_api_auth_py["📄 src/api/auth.py"]:::fileNode
-    KRONOS-MEMORY-005 -->|governs| src_api_auth_py
+    atlas_security_auth_authenticator_py["📄 atlas/security/auth/authenticator.py"]:::fileNode
+    KRONOS-MEMORY-005 -->|governs| atlas_security_auth_authenticator_py
     KRONOS-MEMORY-006["KRONOS-MEMORY-006<br/>All database connections must ..."]:::deprecatedNode
-    src_db_connection_py["📄 src/db/connection.py"]:::fileNode
-    KRONOS-MEMORY-006 -->|governs| src_db_connection_py
+    atlas_database_infrastructure_connector_py["📄 atlas/database/infrastructure/connector.py"]:::fileNode
+    KRONOS-MEMORY-006 -->|governs| atlas_database_infrastructure_connector_py
     KRONOS-MEMORY-003 -.-> KRONOS-MEMORY-006
     KRONOS-MEMORY-007["KRONOS-MEMORY-007<br/>Direct handling of raw credit ..."]:::deprecatedNode
-    src_api_payment_py["📄 src/api/payment.py"]:::fileNode
-    KRONOS-MEMORY-007 -->|governs| src_api_payment_py
+    atlas_core_payments_gateway_py["📄 atlas/core/payments/gateway.py"]:::fileNode
+    KRONOS-MEMORY-007 -->|governs| atlas_core_payments_gateway_py
                         </div>
                     </div>
                 </div>
@@ -650,7 +650,7 @@
                 <div class="vault-grid" id="vault-list">
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-001" data-decision="Use fixed retry intervals instead of exponential backoff strategy." data-reason="Thundering herd effect was identified when dealing with 1000+ concurrent requests, temporarily bringing down the auth service." data-author="alice" data-files="src/api/auth.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-001" data-decision="Use fixed retry intervals instead of exponential backoff strategy." data-reason="Thundering herd effect was identified when dealing with 1000+ concurrent requests, temporarily bringing down the auth service." data-author="alice" data-files="atlas/security/auth/authenticator.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-001</div>
                             <div class="vault-badges">
@@ -664,7 +664,7 @@
                         <div class="vault-reason">Thundering herd effect was identified when dealing with 1000+ concurrent requests, temporarily bringing down the auth service.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/api/auth.py
+                                📁 governs: atlas/security/auth/authenticator.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">alice</span>
@@ -675,7 +675,7 @@
                     
                     <div class="vault-card" data-id="KRONOS-MEMORY-002" data-decision="Always use SQLAlchemy async sessions for database queries." data-reason="Synchronous queries were blocking the FastAPI event loop, causing severe latency spikes during load.
 
-[EVOLVED in https://github.com/Nexorax-nk/KRONOS/pull/4]: We found a better async driver" data-author="dev-author" data-files="src/db/*.py ">
+[EVOLVED in https://github.com/Nexorax-nk/KRONOS/pull/4]: We found a better async driver" data-author="dev-author" data-files="atlas/database/infrastructure/*.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-002</div>
                             <div class="vault-badges">
@@ -691,7 +691,7 @@
 [EVOLVED in https://github.com/Nexorax-nk/KRONOS/pull/4]: We found a better async driver</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/db/*.py
+                                📁 governs: atlas/database/infrastructure/*.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">dev-author</span>
@@ -700,7 +700,7 @@
                     </div>
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-003" data-decision="All database interactions must utilize pooled connection objects. Do not instantiate new connection blocks inside standard queries." data-reason="Direct socket instantiation resulted in connection pooling exhaustion under high load during a spike in February, causing 500 server errors for 15 minutes." data-author="charlie" data-files="src/db/connection.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-003" data-decision="All database interactions must utilize pooled connection objects. Do not instantiate new connection blocks inside standard queries." data-reason="Direct socket instantiation resulted in connection pooling exhaustion under high load during a spike in February, causing 500 server errors for 15 minutes." data-author="charlie" data-files="atlas/database/infrastructure/connector.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-003</div>
                             <div class="vault-badges">
@@ -714,7 +714,7 @@
                         <div class="vault-reason">Direct socket instantiation resulted in connection pooling exhaustion under high load during a spike in February, causing 500 server errors for 15 minutes.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/db/connection.py
+                                📁 governs: atlas/database/infrastructure/connector.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">charlie</span>
@@ -723,7 +723,7 @@
                     </div>
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-004" data-decision="Plaintext logging of PII (credentials, tokens, cards, SSNs) is strictly prohibited. Logger utilities must execute scrubbing routines." data-reason="Compliance audits flagged exposed user JWT tokens in the staging server log streams, creating a high-severity data leakage vulnerability." data-author="sec_expert" data-files="src/utils/logger.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-004" data-decision="Plaintext logging of PII (credentials, tokens, cards, SSNs) is strictly prohibited. Logger utilities must execute scrubbing routines." data-reason="Compliance audits flagged exposed user JWT tokens in the staging server log streams, creating a high-severity data leakage vulnerability." data-author="sec_expert" data-files="atlas/core/telemetry/logger.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-004</div>
                             <div class="vault-badges">
@@ -739,7 +739,7 @@
                         <div class="vault-reason">Compliance audits flagged exposed user JWT tokens in the staging server log streams, creating a high-severity data leakage vulnerability.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/utils/logger.py
+                                📁 governs: atlas/core/telemetry/logger.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">sec_expert</span>
@@ -748,7 +748,7 @@
                     </div>
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-005" data-decision="All JWT signature operations must use RS256 asymmetric keys. HS256 symmetric signing is banned due to key-sharing exposure risks." data-reason="Prevent credential misuse if a sub-service key leaks. Asymmetric keys ensure only the identity microservice can sign tokens." data-author="sec_expert" data-files="src/api/auth.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-005" data-decision="All JWT signature operations must use RS256 asymmetric keys. HS256 symmetric signing is banned due to key-sharing exposure risks." data-reason="Prevent credential misuse if a sub-service key leaks. Asymmetric keys ensure only the identity microservice can sign tokens." data-author="sec_expert" data-files="atlas/security/auth/authenticator.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-005</div>
                             <div class="vault-badges">
@@ -764,7 +764,7 @@
                         <div class="vault-reason">Prevent credential misuse if a sub-service key leaks. Asymmetric keys ensure only the identity microservice can sign tokens.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/api/auth.py
+                                📁 governs: atlas/security/auth/authenticator.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">sec_expert</span>
@@ -773,7 +773,7 @@
                     </div>
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-006" data-decision="All database connections must explicitly configure and enforce SSL mode 'require' to secure queries in transit." data-reason="Prevent MITM eavesdropping on internal database connection channels inside cloud environments." data-author="charlie" data-files="src/db/connection.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-006" data-decision="All database connections must explicitly configure and enforce SSL mode 'require' to secure queries in transit." data-reason="Prevent MITM eavesdropping on internal database connection channels inside cloud environments." data-author="charlie" data-files="atlas/database/infrastructure/connector.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-006</div>
                             <div class="vault-badges">
@@ -789,7 +789,7 @@
                         <div class="vault-reason">Prevent MITM eavesdropping on internal database connection channels inside cloud environments.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/db/connection.py
+                                📁 governs: atlas/database/infrastructure/connector.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">charlie</span>
@@ -798,7 +798,7 @@
                     </div>
                     
                     
-                    <div class="vault-card" data-id="KRONOS-MEMORY-007" data-decision="Direct handling of raw credit card numbers or security codes in memory is strictly forbidden. Force payment gateway tokenization." data-reason="Avoid PCI-DSS compliance scope inflation and reduce data security breach exposure." data-author="sec_expert" data-files="src/api/payment.py ">
+                    <div class="vault-card" data-id="KRONOS-MEMORY-007" data-decision="Direct handling of raw credit card numbers or security codes in memory is strictly forbidden. Force payment gateway tokenization." data-reason="Avoid PCI-DSS compliance scope inflation and reduce data security breach exposure." data-author="sec_expert" data-files="atlas/core/payments/gateway.py ">
                         <div class="vault-header">
                             <div class="vault-id">KRONOS-MEMORY-007</div>
                             <div class="vault-badges">
@@ -814,7 +814,7 @@
                         <div class="vault-reason">Avoid PCI-DSS compliance scope inflation and reduce data security breach exposure.</div>
                         <div class="vault-footer">
                             <div class="governed-files">
-                                📁 governs: src/api/payment.py
+                                📁 governs: atlas/core/payments/gateway.py
                             </div>
                             <div style="font-weight: 500;">
                                 Architect: <span style="color:#fff;">sec_expert</span>

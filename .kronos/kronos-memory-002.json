@@ -3,7 +3,7 @@
     "source_pr": "https://github.com/Nexorax-nk/KRONOS/pull/1",
     "date": "2026-05-17T03:27:12.078701",
     "governs_files": [
-        "src/db/*.py"
+        "atlas/database/infrastructure/*.py"
     ],
     "decision": "Always use SQLAlchemy async sessions for database queries.",
     "rejected": "Raw psycopg2 synchronous connections.",
