@@ -12,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "kronos-cli"))
 
 def sim_review():
     # 1. Load our 'Institutional Memory'
-    with open(".kronos/memory-001.json", "r") as f:
+    with open(".kronos/kronos-memory-001.json", "r") as f:
         memory = Memory(**json.load(f))
 
     # 2. Simulate a "Bad" PR Diff (Trying to use Exponential Backoff which was rejected)
