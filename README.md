@@ -14,6 +14,56 @@ This project is built and optimized in collaboration with **IBM Bob**, our elite
 
 ---
 
+## 🎬 The Production Scenario: Outage at Atlas
+
+Imagine this. You are an engineer at **Atlas**.
+Not a toy startup. Atlas is a real-scale financial infrastructure platform.
+
+Every second:
+- Thousands of users authenticate to their accounts
+- Critical payment flows get authorized
+- Complex transactions move across distributed microservices
+- High-fidelity telemetry streams across internal systems
+
+#### ⏱️ Six months ago...
+The Atlas engineering team faced a **catastrophic authentication outage**.
+
+**WHAT HAPPENED?**
+A senior engineer wanted to optimize retry handling during authentication spikes. Intending to reduce retry pressure on the backend authentication servers, he introduced `ExponentialBackoff` inside:
+`atlas/security/auth/authenticator.py`
+
+Under high concurrent traffic:
+1. Thousands of concurrent client retries synchronized due to lack of jitter.
+2. The authentication nodes suffered from a massive thundering herd event and crashed.
+3. **Production Impact**: Complete login failures, payment authorization failures, and a partial outage for **2 full hours**.
+
+The team resolved the incident, rolled back the change, decided on **`KRONOS-MEMORY-001`** (enforcing fixed 5-second intervals with jitter instead of backoff), and moved on.
+
+#### ⏱️ Six months later...
+A new developer joins Atlas. Tasked with fixing a network latency ticket, he naturally thinks: *"We should add exponential retries to the authenticator module."*
+**He introduces the exact same bug.**
+
+And that is the real problem.
+Engineering teams don't repeat failures because they are careless. **They repeat them because organizational memory disappears.**
+
+---
+
+## 🛡️ How KRONOS Clears It
+
+When the new developer opens his Pull Request containing `ExponentialBackoff` retry logic, KRONOS's **Memory Guard** agent instantly intercepts the changes via the GitHub Actions triage gateway:
+
+1.  **Passive Detection is Turned into Active Blocking**: 
+    - The CLI execution runs `kronos review-pr --repo owner/repo --pr PR_NUMBER --fail-on-conflict`.
+    - It matches the diff to `KRONOS-MEMORY-001`'s governed path and detects the rejected code pattern.
+2.  **The CI Check Turns RED ❌**:
+    - The status check fails, turning the Pull Request triage build **Red (Failed)**, preventing developers from bypassing quality gates.
+3.  **Posting the Gatekeeper Comment**:
+    - KRONOS comments directly on the PR with a high-fidelity **Institutional Memory Gate** layout detailing the threat, operational impact of the historical outage, and alternative guidelines!
+4.  **Evolving Safely**:
+    - The merge button remains locked until they either correct the code to `FixedIntervalRetry` or the architectural lead comments `kronos:intentional` to override and evolve the memory ledger.
+
+---
+
 ## The Problem
 
 Teams don't break architecture because they're careless. They break it because:
@@ -183,28 +233,64 @@ This isn't "plug in any LLM." Every core KRONOS capability depends on things Cla
 
 ## Project Structure
 
+This project has been carefully organized to reflect a production-grade enterprise microservice repository:
+
 ```
-kronos/
-├── .github/workflows/
-│   └── kronos.yml             # GitHub Actions CI/CD workflows
-├── agents/
-│   ├── kronos-ask.yml         # KRONOS Ask — conversational memory search
-│   └── kronos-migrate.yml     # KRONOS Migrate — cold-start decision importer
-├── kronos-cli/                # Python CLI package
-│   ├── pyproject.toml
+KRONOS/
+├── .github/
+│   └── workflows/
+│       └── kronos.yml             # GitHub Actions CI/CD workflows
+├── .kronos/                       # Git-native Institutional Memory ledgers
+│   ├── kronos-memory-001.json
+│   ├── kronos-memory-002.json
+│   ├── kronos-memory-003.json
+│   ├── kronos-memory-004.json
+│   ├── kronos-memory-005.json
+│   ├── kronos-memory-006.json
+│   └── kronos-memory-007.json
+├── .vscode/
+│   └── settings.json
+├── atlas/                         # Production microservices workspace
+│   ├── core/
+│   │   ├── payments/
+│   │   │   └── gateway.py         # Payments Tokenization microservice
+│   │   └── telemetry/
+│   │       └── logger.py          # Secure telemetry & logging utilities
+│   ├── database/
+│   │   └── infrastructure/
+│   │       └── connector.py       # Pooled SSL database connections
+│   └── security/
+│       └── auth/
+│           └── authenticator.py   # Critical authentication entrypoint
+├── dashboard/                     # Telemetry Dashboard resources
+├── docs/                          # Architecture & API documentation
+├── examples/                      # Dummy memories & integration mocks
+├── kronos-cli/                    # Python package command line suite
 │   ├── kronos_cli/
-│   │   ├── cli.py             # 5 subcommands: sync, validate, stats, dashboard, review-pr
-│   │   ├── sync.py            # GitHub API integration + memory parser
-│   │   ├── validate.py        # Format checking + DFS cycle detection
-│   │   ├── stats.py           # Carbon math + aggregation
-│   │   └── dashboard.py       # HTML generator with Mermaid.js graphs
-│   └── tests/                 # 43 tests
-├── examples/
-│   └── sample-memories.txt    # Sample data for CLI demos
-├── docs/
-│   └── architecture.html      # Interactive architecture diagrams
-├── README.md
-└── LICENSE                    # MIT
+│   │   ├── agents/                # 8 Dedicated coordinator review agents
+│   │   │   ├── architecture_insight.py
+│   │   │   ├── decision_extractor.py
+│   │   │   ├── doctrine_engine.py
+│   │   │   ├── kronos_ask.py
+│   │   │   ├── memory_guard.py
+│   │   │   ├── promise_audit.py
+│   │   │   ├── reply_handler.py
+│   │   │   ├── reviewer.py
+│   │   │   ├── router.py
+│   │   │   └── security_shield.py
+│   │   ├── templates/             # Jinja2 dashboard web templates
+│   │   ├── cli.py                 # Click entrypoint commands
+│   │   ├── dashboard.py           # Telemetry HTML telemetry compiler
+│   │   ├── github_client.py       # Octokit PR diff & comments fetcher
+│   │   └── models.py              # Pydantic core memory schemas
+│   ├── kronos_cli.egg-info/       # Python build distribution specs
+│   ├── lore_cli.egg-info/         # Legacy egg-info specifications
+│   └── pyproject.toml             # CLI build & module dependencies
+├── .gitignore
+├── dashboard.html                 # Compiled dark-mode visual telemetry dashboard
+├── IBM BOB REPORT.md              # IBM Bob AI partner report
+├── README.md                      # High-end technical documentation
+└── test_kronos.py                 # Multi-agent simulation testing script
 ```
 
 ## Tech Stack
