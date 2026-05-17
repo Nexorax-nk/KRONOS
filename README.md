@@ -1,186 +1,278 @@
-# 🧠 KRONOS: Institutional Memory Gate for GitHub
+# KRONOS — Knowledge-driven Real-time Organisational Network Operations Safeguard
 
-[![Consensus Scan](https://img.shields.io/badge/Guardrail-Active-red.svg?style=for-the-badge)]()
-[![Consensus Engine](https://img.shields.io/badge/Consensus-5--Layer-blueviolet.svg?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)]()
+**Most AI coding tools help you write code faster. KRONOS prevents you from writing the wrong code in the first place.**
 
-> "Teams rarely repeat failures because they are careless. They repeat failures because architectural memory disappears, reviewer knowledge gets buried, and institutional context leaves with engineers. KRONOS blocks merges not out of distrust, but because your predecessors already paid the price."
+KRONOS is a multi-agent system on the GitHub Actions platform that gives your codebase institutional memory. It captures every architectural decision your team makes — from both code reviews AND the actual diffs — predicts failures before code is written, verifies that developers keep their promises, catches security regressions, enforces coding conventions from past reviews, and generates onboarding briefings for new team members.
+
+Zero manual effort. Powered by Anthropic Claude.
 
 ---
 
-## 📽️ System Architecture
+## 🤝 AI Partner Acknowledgment: IBM Bob
 
-KRONOS operates as a closed-loop DevOps guardrail. It monitors Pull Requests actively, executes a 5-layer consensus security and architectural compliance review, blocks regressions at the merge gate, extracts new architectural memories post-merge, and evolves its knowledge ledger based on interactive developer comment threads.
+This project is built and optimized in collaboration with **IBM Bob**, our elite AI development partner. Through high-performance, real-time code generation and autonomous structural refactoring, **IBM Bob** has served as the key co-pilot in engineering KRONOS's 5-layer consensus security architecture and closed-loop evolution ledger.
 
-```mermaid
-flowchart TD
-    subgraph GitHub Workflow
-        A[Developer pushes branch to GitHub] --> B[PR Opened: Trigger kronos-triage]
-        B --> C{5-Layer Consensus Scan}
-        C -->|Violation Found| D[❌ Fail Check: Block Merge & Post Gate Comment]
-        C -->|Code Approved| E[🟢 Pass Check: Enable Merge]
-        
-        D -->|Developer replies with kronos:intentional| F[Trigger kronos-reply-handler]
-        F --> G[Evolve Memory Ledger: Archive/Deprecate Conflict]
-        G --> H[Re-trigger Review: Pass Check]
-        
-        E -->|PR Merged| I[Trigger kronos-post-merge]
-        I --> J[DecisionExtractorAgent: Parse Diff & Write JSON Memory]
-    end
+---
 
-    subgraph KRONOS Local Engine
-        C --> K[MemoryGuardAgent]
-        C --> L[PromiseAuditAgent]
-        C --> M[SecurityShieldAgent]
-        C --> N[ArchitectureInsightAgent]
-        C --> O[DoctrineEngineAgent]
-        J --> P[.kronos/ Memory Ledger]
-        G --> P
-    end
+## The Problem
 
-    style D fill:#772222,stroke:#ff5555,stroke-width:2px,color:#ffffff
-    style E fill:#226622,stroke:#55ff55,stroke-width:2px,color:#ffffff
-    style C fill:#442266,stroke:#8855ff,stroke-width:2px,color:#ffffff
+Teams don't break architecture because they're careless. They break it because:
+
+- The people who understood the original decisions leave
+- Decisions are buried in PR comment threads nobody can find
+- Six months later, someone re-introduces the exact pattern the team rejected
+- Reviewer feedback gets repeated on every PR because nobody remembers the last one
+- New team members have no way to learn what was decided and why
+
+Every ADR tool requires someone to manually write decisions down. Nobody does. The decisions that matter most — the ones made in passing during code review — are the ones that get lost.
+
+## How KRONOS Works
+
+KRONOS follows your work through the entire development lifecycle — from issue to production — and gets smarter with every merge.
+
+```
+                         ┌──────────────┐
+    Event arrives ──────>│ TRIAGE ROUTER │
+    (issue, PR, merge,   └──────┬───────┘
+     mention, schedule)         │ dispatches to specialized agent
+          ┌─────────┬───────────┼───────────┬──────────┬────────┐
+          v         v           v           v          v        v
+   ┌──────────┐┌──────────┐┌──────────┐┌─────────┐┌───────┐┌────────┐
+   │ PRE-     ││ PR       ││ DECISION ││ HEALTH  ││ONBOARD││ COMMIT │
+   │ MORTEM   ││ REVIEW   ││ EXTRACT  ││ AUDIT   ││  ING  ││ LEDGER │
+   │ + SPEC   ││ 5 Layers ││ + Carbon ││ + Graph ││       ││        │
+   └──────────┘└──────────┘└──────────┘└─────────┘└───────┘└────────┘
+
+   Standalone Agents:
+   ┌──────────────┐  ┌──────────────┐
+   │ KRONOS ASK   │  │ KRONOS MIGRATE│
+   │ Q&A from     │  │ Import past  │
+   │ memory       │  │ decisions    │
+   └──────────────┘  └──────────────┘
 ```
 
----
+### 1. Issue Created — Failure Prediction
 
-## 🛡️ The 5-Layer Consensus Micro-Architecture
+When KRONOS is assigned to an issue, it searches your team's entire history for every time someone tried something similar. It finds the failures, predicts what will go wrong, asks hard technical questions, and generates a full engineering spec:
 
-Every Pull Request undergoes parallel evaluation across five highly specialized AI agents coordinated by the central `MRReviewAgent` (Review Coordinator):
+> *"Your team made a decision about this exact pattern. It was September 2025. A 2-hour auth bypass incident. Here's what happened, and here's what will go wrong again if you don't address it."*
 
-| Layer | Agent | Goal | Technique |
-| :--- | :--- | :--- | :--- |
-| **Layer 1** | **Memory Guard** | Prevent Architectural Regression | Correlates proposed code changes against the active historical rules saved in the `.kronos/` ledger. |
-| **Layer 2** | **Promise Audit** | Detect Scope & PR Promise Mismatch | Compares the PR title and description (promises) against the raw code changes to detect hidden/undocumented side effects. |
-| **Layer 3** | **Security Shield** | Prevent Application Vulnerabilities | Paranoid AppSec sentinel checking for SQLi, JWT symmetric key leakage, raw credential logging, and unsafe evaluations. |
-| **Layer 4** | **Architecture Insight** | Stop Tech Drift | Tracks new dependency patterns and architectural divergence from the corporate module blueprint (e.g. `FixedIntervalRetry`). |
-| **Layer 5** | **Doctrine Engine** | Enforce Conventions | Scans for structural code hygiene, missing types, and strict coding conventions. |
+When the developer replies, KRONOS evaluates: vague answers get pushback with references to past incidents. Specific answers get a risk level. Every technical promise is recorded — because KRONOS will check the actual code against these exact words.
 
----
+### 2. PR Opened — Five-Layer Review
 
-## 🧬 Phase 3: Closed-Loop Memory Evolution
+Every open PR gets five layers of scrutiny in a single comment:
 
-KRONOS does not have a static database; it uses **Git-native, self-healing memory**.
+**Layer 1: Memory Conflicts** — Semantic analysis of the diff against all stored decisions. Not keyword matching — KRONOS recognizes that "in-memory dict caching" IS "Redis caching on auth tokens" because the failure mode is identical. Cascading impact analysis when overriding a decision that other decisions depend on.
 
-### 1. Post-Merge Decision Extraction (`kronos extract-pr`)
-Once a PR is merged, the `DecisionExtractorAgent` automatically analyzes the code changes, extracts the core architectural decisions made, assigns an incremental ID (e.g., `KRONOS-MEMORY-008`), and saves it back into the repository as a structured JSON memory ledger in the `.kronos/` directory.
+**Layer 2: Promise Verification** — Reads the linked issue thread, extracts every specific technical claim the developer made, and verifies each one against the actual code. "You said 30-second TTL. Your code says 30 minutes. You promised pub/sub invalidation. I don't see it."
 
-### 2. Interactive Evolution Reply Hook (`kronos handle-reply`)
-If a PR is blocked by KRONOS but the change was deliberate (e.g. upgrading database infrastructure to handle high concurrent load), an architect can override the gate by replying directly on the PR comment:
+**Layer 3: Security Sentinel** — Scans for security-sensitive patterns (auth, crypto, tokens, SQL, XSS, CORS, secrets). Catches SQL injection via string concatenation, MD5 for password hashing, `eval()` on untrusted data. Cross-references against past security decisions and flags regressions.
 
-```text
-kronos:intentional we upgraded our backend infrastructure to handle high concurrent load.
-```
+**Layer 4: Code Intelligence** — Analyzes the actual diff for architectural patterns: new dependencies, API endpoints, schema changes, caching strategies. Cross-references against existing code-sourced memories and flags technology drift.
 
-The `ReplyHandlerAgent` captures this command via a GitHub comment webhook, automatically moves the conflicting rule's status to `Deprecated`, commits the evolved memory ledger back to the repository, and triggers a check re-run—which immediately unlocks the merge gate!
+**Layer 5: Code Pattern Enforcement** — Checks the diff against coding convention rules captured from past reviews. If a reviewer once said "don't use `Optional`, use `X | None`", KRONOS remembers and enforces it automatically. Reviewers never repeat themselves.
 
----
+Then KRONOS gives the developer three options:
 
-## 📊 Cyberpunk Telemetry Dashboard
+| Reply | What happens |
+|---|---|
+| `kronos: intentional — [reasoning]` | Override recorded. Memory updated with new reasoning. |
+| `kronos: accidental` | Original decision stays. Developer revises code. |
+| `kronos: discuss` | Original decision makers brought into the conversation. |
 
-KRONOS includes a premium, glassmorphic dark-mode web console designed to visualize architectural drift and project health:
+KRONOS doesn't block the merge by default, but with `--fail-on-conflict` enabled, it blocks the PR check completely! And it doesn't forget you saw the warning.
 
-*   **Interactive Decision Mesh**: A complete visual flowchart displaying memories, governed file paths, and current status (Active vs. Deprecated).
-*   **Memory Vault**: A searchable ledger detailing governed files, authors, date decided, historical context, and decided-by handles.
-*   **Sustainability & Carbon Telemetry**: Tracks estimated computational load and carbon offset savings resulting from enforcing optimized connection pooling and fixed retries.
+### 3. PR Merged — Decision Extraction
 
----
+After merge, KRONOS runs four extraction phases:
 
-## 💻 CLI Commands Guide
+- **Code Intelligence** — Reads the actual diff for structural changes, new patterns, and removals. Most architectural decisions are never discussed — someone just writes the code. KRONOS catches both.
+- **Discussion Extraction** — Captures confirmed decisions from PR comments with carbon impact estimates, incident type tags, and dependency links.
+- **Code Pattern Extraction** — Turns reviewer corrections into enforceable rules. "Don't use MD5" becomes a rule that's automatically checked on every future PR.
+- **Feature Changelog** — Generates a human-readable entry: what was built, files affected, dependencies changed. A living record of what was actually built.
 
-The KRONOS CLI is packaged as a standard Python module. Install it locally in development mode:
+### 4. Memory Evolution
+
+Decisions aren't static. When a developer overrides a decision with `kronos: intentional`, KRONOS doesn't argue — it updates. The old decision is superseded. The new one is active with the developer's reasoning on record. Dependency links transfer. And KRONOS checks whether the code actually matches the commitments — if you promise bcrypt but ship MD5, the memory records what you said versus what you did.
+
+### 5. Health Audit
+
+On demand: decision health report, sustainability report with carbon impact (kWh/month, CO2 equivalent, trees equivalent), ASCII knowledge graph of decision dependencies, security inventory with staleness warnings, and coverage gaps for files with no governing decisions.
+
+### 6. Onboarding
+
+Generates a complete briefing for new team members: security decisions first (non-negotiable), architecture decisions by file, performance decisions with carbon data, top 3 past incidents, key people table, and the last 10 changelog entries so new members see what was actually built.
+
+### 7. Conversational Search
+
+@mention KRONOS Ask and ask in natural language: "What decisions govern authentication?" KRONOS doesn't return search results. It answers like a teammate who was there — with specific decisions, dates, people, and reasoning.
+
+### 8. Cold-Start Import
+
+The biggest problem with any memory system: it's empty on day one. KRONOS Migrate scans your project's past pull requests, extracts architectural decisions from discussion threads, and writes them as KRONOS memories. One command, and your project has institutional memory from day one.
+
+## The Python CLI
+
+KRONOS includes `kronos-cli`, a Python package with real engineering beyond prompts:
 
 ```bash
-pip install -e ./kronos-cli
+kronos validate    # Check memory format, field values, dependency integrity, circular deps
+kronos stats       # JSON output: memory counts, carbon totals, security inventory, coverage
+kronos sync        # Read memories from issue store, write to wiki pages, build KRONOS-INDEX
+kronos dashboard   # Generate visual HTML dashboard with decision graphs and carbon tables
 ```
 
-### 1. Validate Memory Ledger
-Checks all JSON files inside `.kronos/` to ensure strict schema validation against the Pydantic models.
-```bash
-kronos validate --path .kronos
+**43 passing tests** covering validation logic, carbon math, dependency graph traversal (DFS cycle detection), and dashboard generation.
+
+### Visual Dashboard
+
+`kronos dashboard` generates a self-contained HTML page with:
+- Summary cards: total memories, security count, carbon impact, pattern rules
+- Mermaid.js decision graph showing memory dependencies and blocks
+- Carbon impact table with savings/costs and CO2 equivalent
+- File coverage map showing which files have governing decisions
+- Security inventory with staleness warnings
+- Code pattern rules with bad/good examples
+
+## CI/CD Pipeline
+
+```yaml
+stages:
+  - validate    # YAML syntax + 64 KiB catalog size check
+  - test        # pytest on kronos-cli (43 tests)
+  - sync        # Publish to AI Catalog + sync memories to wiki
+  - pages       # Generate and deploy dashboard to GitHub Pages
 ```
 
-### 2. Generate Cyberpunk Dashboard
-Generates a stunning glassmorphic visual report of your architectural governance ledger.
+## Architecture
+
+KRONOS uses a multi-component router architecture on the GitHub Actions platform. A triage router inspects context (issue, PR state, keywords, reply commands) using read-only tools and dispatches to one of eight specialized agents:
+
+| Component | Purpose |
+|---|---|
+| Triage Router | Context classification and dispatch |
+| Pre-Mortem Agent | Issue analysis, failure prediction, spec generation |
+| MR Review Agent | Five-layer merge request analysis |
+| Reply Handler | Memory evolution via `kronos:` commands |
+| Decision Extractor | Post-merge decision + pattern + changelog extraction |
+| Health Auditor | Decision health, carbon, knowledge graph |
+| Onboarding Agent | New member briefing generation |
+| Commit Keeper | Commit-level intelligence and ledger |
+
+Plus two standalone agents: **KRONOS Ask** (conversational search) and **KRONOS Migrate** (retroactive decision import).
+
+## Carbon & Sustainability Tracking
+
+Every decision includes a carbon impact estimate. KRONOS uses Anthropic Claude to reason about the compute implications of architectural decisions — a caching layer that eliminates database round-trips, a batch strategy that replaces individual queries, fixed retry intervals that prevent thundering herd cascades.
+
+Aggregated into sustainability reports: total kWh/month, CO2 equivalent (using IEA global average grid intensity of ~0.4 kg CO2/kWh), and trees equivalent (using EPA figure of ~21 kg CO2 absorbed per mature tree per year).
+
+These are order-of-magnitude estimates — not accounting-grade measurements. The goal is making energy cost visible in architectural decisions so teams can factor sustainability into trade-offs they're already making.
+
+## Why Anthropic Claude?
+
+This isn't "plug in any LLM." Every core KRONOS capability depends on things Claude specifically does well:
+
+- **Semantic conflict detection** — KRONOS doesn't keyword-match. When a dev introduces "in-memory dict caching," Claude recognizes this IS the same pattern as "Redis caching on auth tokens" because the failure mode is identical. No embedding similarity threshold gets this right.
+- **Long-context cross-PR pattern recognition** — Claude reads 50+ PR discussion threads in a single pass and spots that three different teams hit the same retry failure.
+- **Decision vs. noise discrimination** — PR threads are 90% "LGTM" and "nit: spacing." Claude distinguishes "we chose X because Y" from drive-by approvals.
+- **Promise verification** — Claude reads a developer's commitments on an issue ("we'll use 30-second TTL with pub/sub invalidation") and checks the actual code, line by line, against those exact promises.
+- **Security regression detection** — When someone replaces JWT validation with a "simpler" token check, Claude understands these are not equivalent security patterns.
+- **Opinionated voice** — Claude's instruction-following lets LORE speak as a slightly haunted senior engineer who has seen things break. The persona makes developers actually read the warnings.
+
+## Project Structure
+
+```
+kronos/
+├── .github/workflows/
+│   └── kronos.yml             # GitHub Actions CI/CD workflows
+├── agents/
+│   ├── kronos-ask.yml         # KRONOS Ask — conversational memory search
+│   └── kronos-migrate.yml     # KRONOS Migrate — cold-start decision importer
+├── kronos-cli/                # Python CLI package
+│   ├── pyproject.toml
+│   ├── kronos_cli/
+│   │   ├── cli.py             # 5 subcommands: sync, validate, stats, dashboard, review-pr
+│   │   ├── sync.py            # GitHub API integration + memory parser
+│   │   ├── validate.py        # Format checking + DFS cycle detection
+│   │   ├── stats.py           # Carbon math + aggregation
+│   │   └── dashboard.py       # HTML generator with Mermaid.js graphs
+│   └── tests/                 # 43 tests
+├── examples/
+│   └── sample-memories.txt    # Sample data for CLI demos
+├── docs/
+│   └── architecture.html      # Interactive architecture diagrams
+├── README.md
+└── LICENSE                    # MIT
+```
+
+## Tech Stack
+
+- **GitHub Actions Platform** — Flow orchestration, triggers, event routing
+- **Anthropic Claude** — Semantic reasoning across all 8 agents
+- **GitHub Wiki** — Persistent memory storage (KRONOS-INDEX + memory pages)
+- **GitHub API** — PR diffs, discussions, issues, wiki, search
+- **Python** — CLI tools (sync, validate, stats, dashboard)
+- **Mermaid.js** — Decision graph visualization
+- **GitHub Pages** — Dashboard deployment
+
+## Setup
+
+### Prerequisites
+
+- GitHub repository with Actions enabled
+- Secrets configured (`GITHUB_TOKEN` and `ANTHROPIC_API_KEY`)
+
+### Quick Start
+
 ```bash
+# 1. Push and tag
+git add . && git commit -m "KRONOS" && git tag v1.0.0
+git push origin main --tags
+
+# 2. Install CLI
+pip install ./kronos-cli
+
+# 3. Seed initial memory (or use KRONOS Migrate to scan past PRs)
+# Create wiki pages KRONOS-INDEX and KRONOS-MEMORY-001
+
+# 4. Generate local dashboard
 kronos dashboard --path .kronos --output dashboard.html
 ```
 
-### 3. Actively Review Pull Request (GitOps Gateway)
-Runs the 5-layer multi-agent consensus review on a specific GitHub Pull Request. Setting `--fail-on-conflict` enables strict guardrails, returning exit code 1 to block merging on failure.
-```bash
-kronos review-pr --repo owner/repo --pr PR_NUMBER --fail-on-conflict
+## Memory Format
+
+```
+KRONOS Memory #001
+Source PR: #42 — Add retry logic
+Date: 2026-01-15
+Governs files: atlas/security/auth/authenticator.py
+Decision: Use fixed retry intervals
+Rejected: Exponential backoff
+Reason: Thundering herd at 1000+ concurrent requests
+Future implication: No exponential backoff in retry logic
+Decided by: @alice, @bob
+Confidence: HIGH
+Status: Active
+Carbon impact: ~300 kWh/month saved
+Incident type: retry
+Depends on: N/A
+Blocks: Memory #003
+Source type: discussion
+Security relevant: no
 ```
 
-### 4. Post-Merge Extraction
-Hook triggered after a successful merge to extract code changes and save them back into the `.kronos/` ledger.
-```bash
-kronos extract-pr --repo owner/repo --pr PR_NUMBER --path .kronos
-```
+## Built for the GitHub AI Hackathon 2026
 
-### 5. Process Developer Overrides
-Webhook utility to process interactive inline commands (e.g. `kronos:intentional`) and evolve the memory ledger.
-```bash
-kronos handle-reply --repo owner/repo --pr PR_NUMBER --comment "COMMENT_BODY" --path .kronos
-```
+Most submissions will be "AI writes better code." KRONOS is "AI prevents you from repeating your own mistakes."
 
----
+It doesn't just remember decisions. It reads your code, catches your mistakes, checks your promises, enforces your reviewers' feedback, tracks your carbon footprint, and speaks like a senior engineer who has seen things break.
 
-## ⚙️ GitHub Actions CI/CD Integration
+Powered by Anthropic Claude for semantic reasoning, failure prediction, security analysis, and sustainability tracking.
 
-To integrate KRONOS as an automated architectural gateway in your repository, place the following workflow in `.github/workflows/kronos.yml`:
+Co-developed in alliance with our AI coding partner **IBM Bob**.
 
-```yaml
-name: KRONOS Institutional Memory Gate
+## License
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-  issue_comment:
-    types: [created]
-
-permissions:
-  pull-requests: write
-  issues: write
-  contents: write
-
-jobs:
-  kronos-triage:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install KRONOS Core
-        run: pip install ./kronos-cli
-      - name: Active Consensus Review
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: kronos review-pr --repo $REPO --pr $PR_NUMBER --fail-on-conflict
-```
-
----
-
-## 🚀 Rebranded Corporate Workspace (`atlas/`)
-
-Under the hood, KRONOS protects your core microservice architecture structured inside the production-grade **`atlas/`** modular namespace:
-
-*   🔒 **`atlas/security/auth/`**: Governs credentials validation and authentication retries.
-*   🛢️ **`atlas/database/infrastructure/`**: Enforces secure SSL socket connections and robust pool allocation.
-*   💳 **`atlas/core/payments/`**: Enforces strict PCI-DSS gateway tokenization protocols.
-*   📊 **`atlas/core/telemetry/`**: Redacts raw logs and masks Personally Identifiable Information (PII).
-
----
-
-> "I block this merge not because I distrust you. I block it because your predecessors already paid the price for this pattern."
-> — **KRONOS**
+MIT — see [LICENSE](LICENSE)
