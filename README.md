@@ -1,4 +1,4 @@
-# KRONOS — Knowledge-driven Real-time Organisational Network Operations Safeguard
+# KRONOS — Knowledge Retention & Organisational Network OS
 
 **Most AI coding tools help you write code faster. KRONOS prevents you from writing the wrong code in the first place.**
 
@@ -349,7 +349,7 @@ Source type: discussion
 Security relevant: no
 ```
 
-## Built for the GitHub AI Hackathon 2026
+## Built for the lablab-AI IBM BOB Hackathon 2026
 
 Most submissions will be "AI writes better code." KRONOS is "AI prevents you from repeating your own mistakes."
 
